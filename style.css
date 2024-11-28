@@ -1,12 +1,11 @@
-body {
+html, body {
     font-family: Arial, sans-serif;
+    height: 100%;
     margin: 0;
     padding: 0;
 }
 
 #map {
     height: 100vh; /* Full viewport height */
-    width: 100%; /* Full width of the page */
-    margin: 0;
-    padding: 0;
+    width: 100vw; /* Full width of the page */
 }
