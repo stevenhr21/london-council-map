@@ -5,6 +5,8 @@ body {
 }
 
 #map {
-    height: 500px;
-    width: 100%;
+    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full width of the page */
+    margin: 0;
+    padding: 0;
 }
