@@ -53,3 +53,21 @@ body, html {
     max-width: 200px;         /* Limit tooltip width */
     word-wrap: break-word;    /* Wrap long text */
 }
+
+/* Popup styling for hover interaction */
+.leaflet-popup-content-wrapper {
+    background-color: #ffffff; /* White background */
+    padding: 10px;            /* Padding inside the popup */
+    border-radius: 5px;       /* Rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.leaflet-popup-content a {
+    color: #0066cc; /* Link color */
+    text-decoration: underline; /* Underline links */
+    font-weight: bold; /* Bold links */
+}
+
+.leaflet-popup-content a:hover {
+    color: #ff7800; /* Hover color for links */
+}
