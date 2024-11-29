@@ -4,3 +4,23 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+
+// Fetch and add GeoJSON data for London boroughs
+fetch('data/london_boroughs.JSON') // Path to your GeoJSON file
+    .then(response => response.json())
+    .then(data => {
+        // Add borough polygons to the map
+        L.geoJSON(data, {
+            style: {
+                color: "#3388ff",      // Blue boundary lines
+                weight: 2,            // Line thickness
+                opacity: 0.7,         // Line transparency
+                fillColor: "#3388ff", // Fill color
+                fillOpacity: 0.1      // Fill transparency
+            },
+            onEachFeature: (feature, layer) => {
+                // Add popup for each borough
+                layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
+            }
+        }).addTo(map);
+    });
