@@ -39,4 +39,17 @@ body, html {
     text-align: center;
     padding: 5px 0;
     z-index: 1000;
+
+/* Tooltip styling for hover interaction */
+.leaflet-tooltip.hover-tooltip {
+    background-color: #ff7800; /* Orange background */
+    color: white;             /* White text */
+    font-size: 14px;          /* Adjust font size */
+    font-weight: bold;        /* Bold text */
+    border: none;             /* No border */
+    border-radius: 4px;       /* Rounded corners */
+    padding: 10px;            /* Add some padding */
+    text-align: left;         /* Align text to the left */
+    max-width: 200px;         /* Limit tooltip width */
+    word-wrap: break-word;    /* Wrap long text */
 }
