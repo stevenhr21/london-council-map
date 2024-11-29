@@ -41,7 +41,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
 
                         // Show a popup with all info
                         const popupContent = `
-                            <div>
+                            <div class="interactive-popup">
                                 <strong>${boroughName}</strong><br>
                                 <strong>Mayor:</strong> ${mayor}<br>
                                 <strong>Population:</strong> ${population}<br>
@@ -49,18 +49,26 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                                 <a href="${website}" target="_blank">Visit Council Website</a>
                             </div>
                         `;
-                        layer.bindPopup(popupContent).openPopup();
+                        layer.bindPopup(popupContent, {
+                            autoClose: false,   // Keep popup open until explicitly closed
+                            closeOnClick: false // Prevent closing when clicking inside
+                        }).openPopup();
                     },
                     mouseout: (e) => {
                         const layer = e.target;
+
+                        // Only close the popup if the mouse is not over the popup
+                        setTimeout(() => {
+                            if (!document.querySelector('.leaflet-popup:hover')) {
+                                layer.closePopup();
+                            }
+                        }, 200); // Slight delay to check hover state
+
                         layer.setStyle({
                             weight: 2,
                             color: "#0066cc",
                             fillOpacity: 0.2
                         });
-
-                        // Close the popup when mouse leaves
-                        layer.closePopup();
                     }
                 });
             }
