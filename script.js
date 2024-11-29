@@ -29,7 +29,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     : "Data not available";
                 const website = feature.properties.Website || "#";
 
-                // Hover effects
+                // Hover effects with tooltip showing all info
                 layer.on({
                     mouseover: (e) => {
                         const layer = e.target;
@@ -39,7 +39,13 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             fillOpacity: 0.5
                         });
                         layer.bindTooltip(
-                            `<strong>${boroughName}</strong><br>Mayor: ${mayor}`,
+                            `
+                            <strong>${boroughName}</strong><br>
+                            <strong>Mayor:</strong> ${mayor}<br>
+                            <strong>Population:</strong> ${population}<br>
+                            <strong>Budget (24/25):</strong> ${budget}<br>
+                            <a href="${website}" target="_blank">Visit Council Website</a>
+                            `,
                             { permanent: false, direction: "top", className: "hover-tooltip" }
                         ).openTooltip();
                     },
@@ -53,15 +59,6 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                         layer.closeTooltip();
                     }
                 });
-
-                // Popup with detailed information
-                layer.bindPopup(`
-                    <strong>${boroughName}</strong><br>
-                    <strong>Mayor:</strong> ${mayor}<br>
-                    <strong>Population:</strong> ${population}<br>
-                    <strong>Budget (24/25):</strong> ${budget}<br>
-                    <a href="${website}" target="_blank">Visit Council Website</a>
-                `);
             }
         }).addTo(map);
     })
