@@ -41,7 +41,8 @@ fetch('data/london_boroughs.json') // Path to your GeoJSON file
                             color: "#0066cc",     // Reset to original color
                             fillOpacity: 0.2
                         });
-                        map.closeTooltip();
+                        // Close the tooltip on mouseout
+                        layer.closeTooltip();
                     }
                 });
 
