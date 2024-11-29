@@ -51,7 +51,12 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 });
 
                 // Add a popup for each borough (click interaction)
-                layer.bindPopup(`<strong>${feature.properties.lad22nm}</strong>`);
+                layer.bindPopup(`
+    <strong>${feature.properties.lad22nm}</strong><br>
+    Population: ${feature.properties.population}<br>
+    Budget: £${feature.properties.budget.toLocaleString()}<br>
+    Mayor: ${feature.properties.mayor}<br>
+    <a href="${feature.properties.website}" target="_blank">Visit Council Website</a>`);
             }
         }).addTo(map);
     });
