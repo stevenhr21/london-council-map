@@ -40,29 +40,21 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                         });
 
                         // Show a popup with all info
-                        const popupContent = `
-                            <div class="interactive-popup">
+                        layer.bindPopup(`
+                            <div>
                                 <strong>${boroughName}</strong><br>
                                 <strong>Mayor:</strong> ${mayor}<br>
                                 <strong>Population:</strong> ${population}<br>
                                 <strong>Budget (24/25):</strong> ${budget}<br>
                                 <a href="${website}" target="_blank">Visit Council Website</a>
                             </div>
-                        `;
-                        layer.bindPopup(popupContent, {
-                            autoClose: false,
-                            closeOnClick: false
-                        }).openPopup();
+                        `).openPopup();
                     },
                     mouseout: (e) => {
                         const layer = e.target;
 
-                        // Ensure popup closes immediately after mouseout
-                        setTimeout(() => {
-                            if (!map._popup || !map._popup._container.matches(':hover')) {
-                                layer.closePopup();
-                            }
-                        }, 50); // Short delay to ensure smooth closing
+                        // Close the popup immediately
+                        layer.closePopup();
 
                         // Reset the layer's style
                         layer.setStyle({
@@ -75,4 +67,4 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             }
         }).addTo(map);
     })
-    .catch(err => console.error("Failed to load GeoJSON data:", err));d GeoJSON data:", err));
+    .catch(err => console.error("Failed to load GeoJSON data:", err));
