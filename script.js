@@ -6,13 +6,13 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Fetch and display the GeoJSON data
-fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
+fetch('data/london_boroughs.json') // Path to your GeoJSON file
     .then(response => response.json())
     .then(data => {
         // Add the GeoJSON layer to the map
         L.geoJSON(data, {
             style: {
-                color: "#0066cc",      // Boundary Lines (dark blue)
+                color: "#0066cc",      // Boundary lines (dark blue)
                 weight: 2,            // Line thickness
                 opacity: 0.8,         // Line transparency
                 fillColor: "#66b3ff", // Fill color
@@ -51,13 +51,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 });
 
                 // Add a popup for each borough (click interaction)
-                layer.bindPopup(`
-    <strong>${feature.properties.lad22nm}</strong><br>
-    Population: ${feature.properties.population}<br>
-    Budget: £${feature.properties.budget(24/25).toLocaleString()}<br>
-    Mayor: ${feature.properties.mayor}<br>
-    <a href="${feature.properties.website}" target="_blank">Visit Council Website</a>
-    `);
+                layer.bindPopup(`<strong>${feature.properties.lad22nm}</strong>`);
             }
         }).addTo(map);
     });
