@@ -29,7 +29,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     : "Data not available";
                 const website = feature.properties.Website || "#";
 
-                // Hover effects with popup showing all info
+                // Hover effects
                 layer.on({
                     mouseover: (e) => {
                         const layer = e.target;
@@ -38,32 +38,30 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             color: '#ff7800',
                             fillOpacity: 0.5
                         });
-
-                        // Show a popup with all info
-                        layer.bindPopup(`
-                            <div>
-                                <strong>${boroughName}</strong><br>
-                                <strong>Mayor:</strong> ${mayor}<br>
-                                <strong>Population:</strong> ${population}<br>
-                                <strong>Budget (24/25):</strong> ${budget}<br>
-                                <a href="${website}" target="_blank">Visit Council Website</a>
-                            </div>
-                        `).openPopup();
+                        layer.bindTooltip(
+                            `<strong>${boroughName}</strong><br>Mayor: ${mayor}`,
+                            { permanent: false, direction: "top", className: "hover-tooltip" }
+                        ).openTooltip();
                     },
                     mouseout: (e) => {
                         const layer = e.target;
-
-                        // Close the popup immediately
-                        layer.closePopup();
-
-                        // Reset the layer's style
                         layer.setStyle({
                             weight: 2,
                             color: "#0066cc",
                             fillOpacity: 0.2
                         });
+                        layer.closeTooltip();
                     }
                 });
+
+                // Popup with detailed information
+                layer.bindPopup(`
+                    <strong>${boroughName}</strong><br>
+                    <strong>Mayor:</strong> ${mayor}<br>
+                    <strong>Population:</strong> ${population}<br>
+                    <strong>Budget (24/25):</strong> ${budget}<br>
+                    <a href="${website}" target="_blank">Visit Council Website</a>
+                `);
             }
         }).addTo(map);
     })
