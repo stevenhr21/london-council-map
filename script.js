@@ -28,13 +28,14 @@ fetch('data/london_boroughs.json') // Path to your GeoJSON file
                             color: '#ff7800',     // Highlight color (orange)
                             fillOpacity: 0.5     // Slightly less transparent fill
                         });
-                        // Create and open a temporary tooltip
-                        layer.openTooltip({
-                            content: `<strong>${feature.properties.lad22nm}</strong>`,
+
+                        // Show tooltip with borough name
+                        const tooltipContent = `<strong>${feature.properties.lad22nm}</strong>`; // Replace 'lad22nm' with the correct property
+                        layer.bindTooltip(tooltipContent, {
                             permanent: false,
-                            direction: "center",
+                            direction: "top",
                             className: "hover-tooltip"
-                        });
+                        }).openTooltip();
                     },
                     mouseout: (e) => {
                         const layer = e.target;
@@ -43,12 +44,13 @@ fetch('data/london_boroughs.json') // Path to your GeoJSON file
                             color: "#0066cc",     // Reset to original color
                             fillOpacity: 0.2
                         });
-                        // Close and remove the tooltip
+
+                        // Close tooltip when mouse leaves
                         layer.closeTooltip();
                     }
                 });
 
-                // Add a popup for each borough
+                // Add a popup for each borough (click interaction)
                 layer.bindPopup(`<strong>${feature.properties.lad22nm}</strong>`);
             }
         }).addTo(map);
