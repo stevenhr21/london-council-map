@@ -54,9 +54,10 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 layer.bindPopup(`
     <strong>${feature.properties.lad22nm}</strong><br>
     Population: ${feature.properties.population}<br>
-    Budget: £${feature.properties.budget.toLocaleString()}<br>
+    Budget: £${feature.properties.budget(24/25).toLocaleString()}<br>
     Mayor: ${feature.properties.mayor}<br>
-    <a href="${feature.properties.website}" target="_blank">Visit Council Website</a>`);
+    <a href="${feature.properties.website}" target="_blank">Visit Council Website</a>
+    `);
             }
         }).addTo(map);
     });
