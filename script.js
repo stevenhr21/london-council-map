@@ -19,7 +19,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 fillOpacity: 0.2      // Fill transparency
             },
             onEachFeature: (feature, layer) => {
-                // Add event listeners for hover effects
+                // Add hover effects
                 layer.on({
                     mouseover: (e) => {
                         const layer = e.target;
@@ -28,9 +28,11 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             color: '#ff7800',     // Highlight color (orange)
                             fillOpacity: 0.5     // Slightly less transparent fill
                         });
-
-                        // Show tooltip with borough name
-                        const tooltipContent = `<strong>${feature.properties.lad22nm}</strong>`; // Replace 'lad22nm' with the correct property
+                        // Display borough name and mayor in a tooltip
+                        const tooltipContent = `
+                            <strong>${feature.properties.lad22nm}</strong><br>
+                            Mayor: ${feature.properties.Mayor}
+                        `;
                         layer.bindTooltip(tooltipContent, {
                             permanent: false,
                             direction: "top",
@@ -44,7 +46,6 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             color: "#0066cc",     // Reset to original color
                             fillOpacity: 0.2
                         });
-
                         // Close tooltip when mouse leaves
                         layer.closeTooltip();
                     }
