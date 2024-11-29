@@ -12,11 +12,11 @@ fetch('data/london_boroughs.json') // Path to your GeoJSON file
         // Add the GeoJSON layer to the map
         L.geoJSON(data, {
             style: {
-                color: "#3388ff",      // Blue boundary lines
+                color: "#0066cc",      // Boundary Lines (dark blue)
                 weight: 2,            // Line thickness
-                opacity: 0.7,         // Line transparency
-                fillColor: "#3388ff", // Fill color
-                fillOpacity: 0.1      // Fill transparency
+                opacity: 0.8,         // Line transparency
+                fillColor: "#66b3ff", // Fill color
+                fillOpacity: 0.2      // Fill transparency
             },
             onEachFeature: (feature, layer) => {
                 // Add a popup for each borough
