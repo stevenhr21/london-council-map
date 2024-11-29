@@ -20,7 +20,7 @@ fetch('data/london_boroughs.json') // Path to your GeoJSON file
             },
             onEachFeature: (feature, layer) => {
                 // Add a popup for each borough
-                layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
+                layer.bindPopup(`<strong>${feature.properties.lad22nm}</strong>`);
             }
         }).addTo(map);
     });
