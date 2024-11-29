@@ -6,7 +6,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Fetch and display the GeoJSON data
-fetch('data/London_Boroughs.json') // Path to your GeoJSON file
+fetch('data/London_Boroughs.JSON') // Path to your GeoJSON file
     .then(response => response.json())
     .then(data => {
         // Add the GeoJSON layer to the map
