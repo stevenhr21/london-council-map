@@ -29,7 +29,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     : "Data not available";
                 const website = feature.properties.Website || "#";
 
-                // Hover effects with tooltip showing all info
+                // Hover effects with popup showing all info
                 layer.on({
                     mouseover: (e) => {
                         const layer = e.target;
@@ -38,16 +38,18 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             color: '#ff7800',
                             fillOpacity: 0.5
                         });
-                        layer.bindTooltip(
-                            `
-                            <strong>${boroughName}</strong><br>
-                            <strong>Mayor:</strong> ${mayor}<br>
-                            <strong>Population:</strong> ${population}<br>
-                            <strong>Budget (24/25):</strong> ${budget}<br>
-                            <a href="${website}" target="_blank">Visit Council Website</a>
-                            `,
-                            { permanent: false, direction: "top", className: "hover-tooltip" }
-                        ).openTooltip();
+
+                        // Show a popup with all info
+                        const popupContent = `
+                            <div>
+                                <strong>${boroughName}</strong><br>
+                                <strong>Mayor:</strong> ${mayor}<br>
+                                <strong>Population:</strong> ${population}<br>
+                                <strong>Budget (24/25):</strong> ${budget}<br>
+                                <a href="${website}" target="_blank">Visit Council Website</a>
+                            </div>
+                        `;
+                        layer.bindPopup(popupContent).openPopup();
                     },
                     mouseout: (e) => {
                         const layer = e.target;
@@ -56,7 +58,9 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             color: "#0066cc",
                             fillOpacity: 0.2
                         });
-                        layer.closeTooltip();
+
+                        // Close the popup when mouse leaves
+                        layer.closePopup();
                     }
                 });
             }
