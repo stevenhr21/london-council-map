@@ -20,7 +20,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             onEachFeature: (feature, layer) => {
                 // Extract properties safely with fallback values
                 const boroughName = feature.properties.lad22nm || "Unknown Borough";
-                const mayor = feature.properties.Mayor || "Information not available";
+                const Leader = feature.properties.Leader || "Information not available";
                 const population = feature.properties.Population
                     ? feature.properties.Population.toLocaleString()
                     : "Data not available";
@@ -39,7 +39,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             fillOpacity: 0.5
                         });
                         layer.bindTooltip(
-                            `<strong>${boroughName}</strong><br>Mayor: ${mayor}`,
+                            `<strong>${boroughName}</strong><br>Leader: ${Leader}`,
                             { permanent: false, direction: "top", className: "hover-tooltip" }
                         ).openTooltip();
                     },
@@ -57,7 +57,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 // Popup with detailed information
                 layer.bindPopup(`
                     <strong>${boroughName}</strong><br>
-                    <strong>Mayor:</strong> ${mayor}<br>
+                    <strong>Leader:</strong> ${Leader}<br>
                     <strong>Population:</strong> ${population}<br>
                     <strong>Budget (24/25):</strong> ${budget}<br>
                     <a href="${website}" target="_blank">Visit Council Website</a>
