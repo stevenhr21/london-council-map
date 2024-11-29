@@ -9,49 +9,60 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
     .then(response => response.json())
     .then(data => {
-        // Add the GeoJSON layer to the map
         L.geoJSON(data, {
             style: {
-                color: "#0066cc",      // Boundary lines (dark blue)
-                weight: 2,            // Line thickness
-                opacity: 0.8,         // Line transparency
-                fillColor: "#66b3ff", // Fill color
-                fillOpacity: 0.2      // Fill transparency
+                color: "#0066cc",
+                weight: 2,
+                opacity: 0.8,
+                fillColor: "#66b3ff",
+                fillOpacity: 0.2
             },
             onEachFeature: (feature, layer) => {
-                // Add event listeners for hover effects
+                // Extract properties safely with fallback values
+                const boroughName = feature.properties.lad22nm || "Unknown Borough";
+                const mayor = feature.properties.Mayor || "Information not available";
+                const population = feature.properties.Population
+                    ? feature.properties.Population.toLocaleString()
+                    : "Data not available";
+                const budget = feature.properties['Budget (24/25)']
+                    ? `£${feature.properties['Budget (24/25)'].toLocaleString()}`
+                    : "Data not available";
+                const website = feature.properties.Website || "#";
+
+                // Hover effects
                 layer.on({
                     mouseover: (e) => {
                         const layer = e.target;
                         layer.setStyle({
                             weight: 3,
-                            color: '#ff7800',     // Highlight color (orange)
-                            fillOpacity: 0.5     // Slightly less transparent fill
+                            color: '#ff7800',
+                            fillOpacity: 0.5
                         });
-
-                        // Show tooltip with borough name
-                        const tooltipContent = `<strong>${feature.properties.lad22nm}</strong>`; // Replace 'lad22nm' with the correct property
-                        layer.bindTooltip(tooltipContent, {
-                            permanent: false,
-                            direction: "top",
-                            className: "hover-tooltip"
-                        }).openTooltip();
+                        layer.bindTooltip(
+                            `<strong>${boroughName}</strong><br>Mayor: ${mayor}`,
+                            { permanent: false, direction: "top", className: "hover-tooltip" }
+                        ).openTooltip();
                     },
                     mouseout: (e) => {
                         const layer = e.target;
                         layer.setStyle({
                             weight: 2,
-                            color: "#0066cc",     // Reset to original color
+                            color: "#0066cc",
                             fillOpacity: 0.2
                         });
-
-                        // Close tooltip when mouse leaves
                         layer.closeTooltip();
                     }
                 });
 
-                // Add a popup for each borough (click interaction)
-                layer.bindPopup(`<strong>${feature.properties.lad22nm}</strong>`);
+                // Popup with detailed information
+                layer.bindPopup(`
+                    <strong>${boroughName}</strong><br>
+                    <strong>Mayor:</strong> ${mayor}<br>
+                    <strong>Population:</strong> ${population}<br>
+                    <strong>Budget (24/25):</strong> ${budget}<br>
+                    <a href="${website}" target="_blank">Visit Council Website</a>
+                `);
             }
         }).addTo(map);
-    });
+    })
+    .catch(err => console.error("Failed to load GeoJSON data:", err));
