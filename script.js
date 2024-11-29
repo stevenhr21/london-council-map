@@ -50,20 +50,21 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             </div>
                         `;
                         layer.bindPopup(popupContent, {
-                            autoClose: false,   // Keep popup open until explicitly closed
-                            closeOnClick: false // Prevent closing when clicking inside
+                            autoClose: false,
+                            closeOnClick: false
                         }).openPopup();
                     },
                     mouseout: (e) => {
                         const layer = e.target;
 
-                        // Only close the popup if the mouse is not over the popup
+                        // Ensure popup closes immediately after mouseout
                         setTimeout(() => {
-                            if (!document.querySelector('.leaflet-popup:hover')) {
+                            if (!map._popup || !map._popup._container.matches(':hover')) {
                                 layer.closePopup();
                             }
-                        }, 200); // Slight delay to check hover state
+                        }, 50); // Short delay to ensure smooth closing
 
+                        // Reset the layer's style
                         layer.setStyle({
                             weight: 2,
                             color: "#0066cc",
@@ -74,4 +75,4 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             }
         }).addTo(map);
     })
-    .catch(err => console.error("Failed to load GeoJSON data:", err));
+    .catch(err => console.error("Failed to load GeoJSON data:", err));d GeoJSON data:", err));
