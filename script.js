@@ -22,7 +22,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             },
             onEachFeature: (feature, layer) => {
                 const boroughName = feature.properties.lad22nm || "Unknown Borough";
-                const leader = feature.properties.Leader || "Information not available"; // Ensure Leader is included
+                const leader = feature.properties.Leader || "Information not available";
                 const population = feature.properties.Population
                     ? feature.properties.Population.toLocaleString()
                     : "Data not available";
@@ -30,6 +30,9 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     ? `£${feature.properties['Budget (24/25)'].toLocaleString()}`
                     : "Data not available";
                 const website = feature.properties.Website || "#";
+
+                // Store borough names for dropdown autocomplete
+                boroughs.push(boroughName);
 
                 // Hover effects
                 layer.on({
@@ -56,7 +59,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     }
                 });
 
-                // Updated popup to include leader information
+                // Popup with detailed information
                 layer.bindPopup(`
                     <strong>${boroughName}</strong><br>
                     <strong>Leader:</strong> ${leader}<br>
@@ -67,9 +70,23 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             }
         }).addTo(map);
 
-        // Custom search functionality
+        // Add dropdown functionality to the search bar
         const searchBox = document.getElementById('search-box');
-        const dropdown = document.getElementById('autocomplete-dropdown');
+        const dropdown = document.createElement('ul');
+        dropdown.id = 'autocomplete-dropdown';
+        dropdown.style.position = 'absolute';
+        dropdown.style.backgroundColor = '#fff';
+        dropdown.style.border = '1px solid #ccc';
+        dropdown.style.listStyle = 'none';
+        dropdown.style.padding = '0';
+        dropdown.style.margin = '0';
+        dropdown.style.maxHeight = '150px';
+        dropdown.style.overflowY = 'auto';
+        dropdown.style.width = `${searchBox.offsetWidth}px`;
+        dropdown.style.zIndex = '1000';
+        dropdown.style.display = 'none'; // Hidden by default
+        searchBox.parentElement.appendChild(dropdown);
+
         searchBox.addEventListener('input', function (e) {
             const query = e.target.value.toLowerCase();
             dropdown.innerHTML = ''; // Clear previous suggestions
