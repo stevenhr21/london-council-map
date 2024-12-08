@@ -31,8 +31,8 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     : "Data not available";
                 const website = feature.properties.Website || "#";
 
-                // Add button link for 'Find out more'
-                const findOutMoreLink = `borough_pages/${boroughName.replace(/\s+/g, '-').toLowerCase()}.html`;
+                // Add borough names to the autocomplete list
+                boroughs.push(boroughName);
 
                 // Hover effects
                 layer.on({
@@ -67,7 +67,10 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     <strong>Budget (24/25):</strong> ${budget}<br>
                     <a href="${website}" target="_blank">Visit Council Website</a><br>
                     <button 
-                        onclick="window.location.href='${findOutMoreLink}'" 
+                        onclick="window.location.href='borough_pages/${boroughName.replace(
+                            /\s+/g,
+                            '-'
+                        ).toLowerCase()}.html'" 
                         style="margin-top: 10px; padding: 5px 10px; background-color: #0066cc; color: white; border: none; border-radius: 5px; cursor: pointer;">
                         Find out more
                     </button>
@@ -75,7 +78,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             }
         }).addTo(map);
 
-        // Custom search functionality (unchanged from previous)
+        // Custom search functionality
         const searchBox = document.getElementById('search-box');
         const dropdown = document.createElement('ul');
         dropdown.id = 'autocomplete-dropdown';
