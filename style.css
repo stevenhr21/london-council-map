@@ -26,13 +26,20 @@ body, html {
     text-align: center;
     padding: 7px 0;
     z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /*Optional: Shadow */
+}
+
+/* Push the main content below the top bar */
+main {
+    margin-top: 50px; /* Adjust to match the height of the top bar */
+    padding: 20px; /* Add padding for better spacing */
 }
 
 /* Menu toggle button styling */
 .menu-button {
     position: absolute;
     right: 15px;
-    top: 10px; /* Ensures it stays within the top bar */
+    top: 7px; /* Aligns vertically with top bar content */
     background-color: #ffffff;
     border: 1px solid #ccc;
     padding: 8px 12px;
@@ -50,13 +57,13 @@ body, html {
 .menu-dropdown {
     display: none; /* Hidden by default */
     position: absolute;
-    top: 45px; /* Adjust to appear below the top bar */
+    top: 50px; /* Ensure dropdown opens below the top bar */
     right: 15px; /* Align to the right side */
     background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-    z-index: 1100; /* Ensure it appears above the top bar and map */
+    z-index: 1050; /* Ensure it appears above the map or content */
     width: 200px; /* Adjust dropdown width */
     padding: 10px;
 }
