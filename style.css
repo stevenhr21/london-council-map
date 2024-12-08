@@ -76,14 +76,29 @@ body, html {
 /* Custom search box container */
 .search-container {
     position: absolute;
-    top: 20px; /* Adjust vertical position */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center align using transform */
+    top: 80px; /* Position below the top bar */
+    left: 20px; /* Align to the left */
     z-index: 1000; /* Ensure it appears above the map */
     background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+}
+
+/* Search input field */
+#search-box {
+    width: 250px; /* Adjust width of the search box */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+}
+
+#search-box:focus {
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.8); /* Highlight on focus */
+    border-color: #0066cc; /* Change border color on focus */
 }
 
 /* Search input field */
