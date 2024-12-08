@@ -18,7 +18,6 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 fillOpacity: 0.2
             },
             onEachFeature: (feature, layer) => {
-                // Extract properties safely with fallback values
                 const boroughName = feature.properties.lad22nm || "Unknown Borough";
                 const Leader = feature.properties.Leader || "Information not available";
                 const population = feature.properties.Population
@@ -76,7 +75,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     const center = bounds.getCenter(); // Calculate center
 
                     // Offset the map's view to account for the top bar height
-                    map.setView([center.lat - 0.03, center.lng], 12); // Adjust latitude
+                    map.setView([center.lat - 0.05, center.lng], 12); // Adjust latitude
                     layer.openPopup(); // Open the popup for the borough
                 }
             });
