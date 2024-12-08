@@ -32,7 +32,7 @@ body, html {
 .menu-button {
     position: absolute;
     right: 15px;
-    top: 15px; /* Ensures it stays within the top bar */
+    top: 10px; /* Ensures it stays within the top bar */
     background-color: #ffffff;
     border: 1px solid #ccc;
     padding: 8px 12px;
@@ -50,13 +50,13 @@ body, html {
 .menu-dropdown {
     display: none; /* Hidden by default */
     position: absolute;
-    top: 47px; /* Place the dropdown below the top bar */
+    top: 45px; /* Adjust to appear below the top bar */
     right: 15px; /* Align to the right side */
     background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-    z-index: 1050; /* Ensure it appears above the map */
+    z-index: 1100; /* Ensure it appears above the top bar and map */
     width: 200px; /* Adjust dropdown width */
     padding: 10px;
 }
