@@ -1,41 +1,50 @@
-// Parse the borough name from the URL
-const urlParams = new URLSearchParams(window.location.search);
-const boroughSlug = urlParams.get("borough"); // Example: "barking-and-dagenham"
+function getBoroughFromURL() {
+    // Extract the borough name from the query string (e.g., ?borough=barking-and-dagenham)
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('borough');
+}
 
-// Load GeoJSON data and populate the page
-fetch("../data/london_boroughs.geojson")
-    .then((response) => response.json())
-    .then((data) => {
-        // Find the borough's data using the slug
-        const boroughData = data.features.find((feature) =>
-            feature.properties.lad22nm.toLowerCase().replace(/\s+/g, "-") === boroughSlug
-        );
+function populateBoroughPage() {
+    const boroughName = getBoroughFromURL();
 
-        if (boroughData) {
-            const props = boroughData.properties;
+    if (!boroughName) {
+        console.error("No borough specified in the URL.");
+        document.getElementById('borough-name').textContent = "Borough not found";
+        return;
+    }
 
-            // Update page content
-            document.getElementById("borough-name").textContent = props.lad22nm;
-            document.getElementById("leader").textContent = props.Leader || "N/A";
-            document.getElementById("population").textContent = props.Population
-                ? props.Population.toLocaleString()
-                : "N/A";
-            document.getElementById("budget").textContent = props["Budget (24/25)"]
-                ? `£${props["Budget (24/25)"].toLocaleString()}`
-                : "N/A";
-            document.getElementById("website").href = props.Website || "#";
-            document.getElementById("website").textContent = props.Website || "N/A";
+    fetch('../data/london_boroughs.geojson') // Path to your GeoJSON file
+        .then(response => response.json())
+        .then(data => {
+            // Find the matching borough in the GeoJSON data
+            const boroughData = data.features.find(feature =>
+                feature.properties.lad22nm.replace(/\s+/g, '-').toLowerCase() === boroughName
+            );
 
-            // Example of dynamic statistic (Population Density)
-            const density = props.Population / props.Area || "N/A"; // Assuming "Area" is in GeoJSON
-            document.getElementById("density").textContent = density
-                ? density.toFixed(2) + " / km²"
-                : "N/A";
-            document.getElementById("density-diff").textContent = density
-                ? `${(density - 1500).toFixed(2)}`
-                : "N/A";
-        } else {
-            document.getElementById("borough-name").textContent = "Borough Not Found";
-        }
-    })
-    .catch((error) => console.error("Error loading GeoJSON data:", error));
+            if (!boroughData) {
+                console.error("Borough not found in GeoJSON.");
+                document.getElementById('borough-name').textContent = "Borough not found";
+                return;
+            }
+
+            // Extract relevant data
+            const { lad22nm, Leader, Population, Budget, Website } = boroughData.properties;
+
+            // Populate page content dynamically
+            document.getElementById('borough-name').textContent = lad22nm;
+            document.getElementById('leader').textContent = Leader || "Information not available";
+            document.getElementById('population').textContent = Population
+                ? Population.toLocaleString()
+                : "Data not available";
+            document.getElementById('budget').textContent = Budget
+                ? `£${Budget.toLocaleString()}`
+                : "Data not available";
+            const websiteLink = document.getElementById('website');
+            websiteLink.textContent = Website ? "Visit Council Website" : "Website not available";
+            websiteLink.href = Website || "#";
+        })
+        .catch(err => console.error("Failed to load GeoJSON data:", err));
+}
+
+// Call the function when the page loads
+document.addEventListener("DOMContentLoaded", populateBoroughPage);
