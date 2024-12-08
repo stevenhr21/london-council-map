@@ -1,6 +1,17 @@
 function getBoroughFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('borough');
+    let boroughName = urlParams.get('borough');
+
+    if (!boroughName) {
+        // Fallback: Extract borough name from the file path
+        boroughName = window.location.pathname
+            .split('/')
+            .pop()
+            .replace('.html', '')
+            .replace(/-/g, ' '); // Convert dashes to spaces
+    }
+
+    return boroughName.toLowerCase();
 }
 
 function populateBoroughPage() {
@@ -15,7 +26,7 @@ function populateBoroughPage() {
         .then(response => response.json())
         .then(data => {
             const boroughData = data.features.find(feature =>
-                feature.properties.lad22nm.toLowerCase().replace(/\s+/g, '-') === boroughName
+                feature.properties.lad22nm.toLowerCase() === boroughName
             );
 
             if (!boroughData) {
