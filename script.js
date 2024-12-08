@@ -22,9 +22,14 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             },
             onEachFeature: (feature, layer) => {
                 const boroughName = feature.properties.lad22nm || "Unknown Borough";
-
-                // Store borough names for dropdown autocomplete
-                boroughs.push(boroughName);
+                const leader = feature.properties.Leader || "Information not available"; // Ensure Leader is included
+                const population = feature.properties.Population
+                    ? feature.properties.Population.toLocaleString()
+                    : "Data not available";
+                const budget = feature.properties['Budget (24/25)']
+                    ? `£${feature.properties['Budget (24/25)'].toLocaleString()}`
+                    : "Data not available";
+                const website = feature.properties.Website || "#";
 
                 // Hover effects
                 layer.on({
@@ -51,77 +56,66 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     }
                 });
 
-                // Popup with detailed information
+                // Updated popup to include leader information
                 layer.bindPopup(`
                     <strong>${boroughName}</strong><br>
-                    <a href="${feature.properties.Website}" target="_blank">Visit Council Website</a>
+                    <strong>Leader:</strong> ${leader}<br>
+                    <strong>Population:</strong> ${population}<br>
+                    <strong>Budget (24/25):</strong> ${budget}<br>
+                    <a href="${website}" target="_blank">Visit Council Website</a>
                 `);
             }
         }).addTo(map);
-    })
-    .catch(err => console.error("Failed to load GeoJSON data:", err));
 
-// Add autocomplete functionality to the search bar
-const searchBox = document.getElementById('search-box');
-const dropdown = document.createElement('ul');
-dropdown.id = 'autocomplete-dropdown';
-dropdown.style.position = 'absolute';
-dropdown.style.backgroundColor = '#fff';
-dropdown.style.border = '1px solid #ccc';
-dropdown.style.listStyle = 'none';
-dropdown.style.padding = '0';
-dropdown.style.margin = '0';
-dropdown.style.maxHeight = '150px';
-dropdown.style.overflowY = 'auto';
-dropdown.style.width = `${searchBox.offsetWidth}px`;
-dropdown.style.zIndex = '1000';
-dropdown.style.display = 'none'; // Hidden by default
-searchBox.parentElement.appendChild(dropdown);
+        // Custom search functionality
+        const searchBox = document.getElementById('search-box');
+        const dropdown = document.getElementById('autocomplete-dropdown');
+        searchBox.addEventListener('input', function (e) {
+            const query = e.target.value.toLowerCase();
+            dropdown.innerHTML = ''; // Clear previous suggestions
 
-searchBox.addEventListener('input', function (e) {
-    const query = e.target.value.toLowerCase();
-    dropdown.innerHTML = ''; // Clear previous suggestions
+            if (query.length === 0) {
+                dropdown.style.display = 'none'; // Hide dropdown if query is empty
+                return;
+            }
 
-    if (query.length === 0) {
-        dropdown.style.display = 'none'; // Hide dropdown if query is empty
-        return;
-    }
+            // Filter borough names based on the input
+            const suggestions = boroughs.filter(borough =>
+                borough.toLowerCase().includes(query)
+            );
 
-    // Filter borough names based on the input
-    const suggestions = boroughs.filter(borough =>
-        borough.toLowerCase().includes(query)
-    );
+            // Populate the dropdown with suggestions
+            suggestions.forEach(suggestion => {
+                const listItem = document.createElement('li');
+                listItem.textContent = suggestion;
+                listItem.style.padding = '5px';
+                listItem.style.cursor = 'pointer';
 
-    // Populate the dropdown with suggestions
-    suggestions.forEach(suggestion => {
-        const listItem = document.createElement('li');
-        listItem.textContent = suggestion;
-        listItem.style.padding = '5px';
-        listItem.style.cursor = 'pointer';
+                listItem.addEventListener('click', () => {
+                    // Find the layer corresponding to the clicked suggestion
+                    geojsonLayer.eachLayer(function (layer) {
+                        if (layer.feature.properties.lad22nm === suggestion) {
+                            const bounds = layer.getBounds();
+                            map.fitBounds(bounds); // Zoom to the selected borough
+                            layer.openPopup(); // Open the popup
+                        }
+                    });
 
-        listItem.addEventListener('click', () => {
-            // Find the layer corresponding to the clicked suggestion
-            geojsonLayer.eachLayer(function (layer) {
-                if (layer.feature.properties.lad22nm === suggestion) {
-                    const bounds = layer.getBounds();
-                    map.fitBounds(bounds); // Zoom to the selected borough
-                    layer.openPopup(); // Open the popup
-                }
+                    searchBox.value = suggestion; // Update the search box with the selected suggestion
+                    dropdown.style.display = 'none'; // Hide the dropdown
+                });
+
+                dropdown.appendChild(listItem);
             });
 
-            searchBox.value = suggestion; // Update the search box with the selected suggestion
-            dropdown.style.display = 'none'; // Hide the dropdown
+            dropdown.style.display = 'block'; // Show the dropdown
         });
 
-        dropdown.appendChild(listItem);
-    });
-
-    dropdown.style.display = 'block'; // Show the dropdown
-});
-
-// Hide the dropdown when clicking outside
-document.addEventListener('click', (e) => {
-    if (!searchBox.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.style.display = 'none';
-    }
-});
+        // Hide the dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchBox.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    })
+    .catch(err => console.error("Failed to load GeoJSON data:", err));
