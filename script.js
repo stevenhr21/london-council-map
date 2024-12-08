@@ -65,17 +65,18 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             }
         }).addTo(map);
 
-        // Add the search control
-        const searchControl = new L.Control.Search({
-            layer: geojsonLayer,
-            propertyName: 'lad22nm', // Search by borough name
-            marker: false, // Disable marker creation
-            moveToLocation: function(latlng, title, map) {
-                // Zoom to the borough when selected
-                map.setView(latlng, 12); // Adjust the zoom level as needed
-            }
+        // Custom search functionality
+        const searchBox = document.getElementById('search-box');
+        searchBox.addEventListener('input', function (e) {
+            const query = e.target.value.toLowerCase(); // Get search input
+            geojsonLayer.eachLayer(function (layer) {
+                const boroughName = layer.feature.properties.lad22nm.toLowerCase();
+                if (boroughName.startsWith(query)) {
+                    // Zoom to matching borough
+                    map.setView(layer.getBounds().getCenter(), 12);
+                    layer.openPopup(); // Open the popup for the borough
+                }
+            });
         });
-
-        searchControl.addTo(map); // Add the search control to the map
     })
     .catch(err => console.error("Failed to load GeoJSON data:", err));
