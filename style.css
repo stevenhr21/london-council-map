@@ -76,8 +76,8 @@ body, html {
 /* Custom search box container */
 .search-container {
     position: absolute;
-    top: 80px; /* Position below the top bar */
-    left: 20px; /* Align to the left */
+    top: 100px; /* Adjust vertical position */
+    left: 30px; /* Adjust horizontal position */
     z-index: 1000; /* Ensure it appears above the map */
     background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
     padding: 10px;
