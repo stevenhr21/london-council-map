@@ -5,11 +5,14 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+let geojsonLayer; // To hold the GeoJSON layer for use in search functionality
+let boroughs = []; // To store borough names for autocomplete
+
 // Fetch and display the GeoJSON data
 fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
     .then(response => response.json())
     .then(data => {
-        const geojsonLayer = L.geoJSON(data, {
+        geojsonLayer = L.geoJSON(data, {
             style: {
                 color: "#0066cc",
                 weight: 2,
@@ -19,14 +22,9 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             },
             onEachFeature: (feature, layer) => {
                 const boroughName = feature.properties.lad22nm || "Unknown Borough";
-                const Leader = feature.properties.Leader || "Information not available";
-                const population = feature.properties.Population
-                    ? feature.properties.Population.toLocaleString()
-                    : "Data not available";
-                const budget = feature.properties['Budget (24/25)']
-                    ? `£${feature.properties['Budget (24/25)'].toLocaleString()}`
-                    : "Data not available";
-                const website = feature.properties.Website || "#";
+
+                // Store borough names for dropdown autocomplete
+                boroughs.push(boroughName);
 
                 // Hover effects
                 layer.on({
@@ -38,7 +36,7 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                             fillOpacity: 0.5
                         });
                         layer.bindTooltip(
-                            `<strong>${boroughName}</strong><br>Leader: ${Leader}`,
+                            `<strong>${boroughName}</strong>`,
                             { permanent: false, direction: "top", className: "hover-tooltip" }
                         ).openTooltip();
                     },
@@ -56,29 +54,74 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 // Popup with detailed information
                 layer.bindPopup(`
                     <strong>${boroughName}</strong><br>
-                    <strong>Leader:</strong> ${Leader}<br>
-                    <strong>Population:</strong> ${population}<br>
-                    <strong>Budget (24/25):</strong> ${budget}<br>
-                    <a href="${website}" target="_blank">Visit Council Website</a>
+                    <a href="${feature.properties.Website}" target="_blank">Visit Council Website</a>
                 `);
             }
         }).addTo(map);
-
-        // Custom search functionality
-        const searchBox = document.getElementById('search-box');
-        searchBox.addEventListener('input', function (e) {
-            const query = e.target.value.toLowerCase(); // Get search input
-            geojsonLayer.eachLayer(function (layer) {
-                const boroughName = layer.feature.properties.lad22nm.toLowerCase();
-                if (boroughName.startsWith(query)) {
-                    const bounds = layer.getBounds(); // Get borough bounds
-                    const center = bounds.getCenter(); // Calculate center
-
-                    // Offset the map's view to account for the top bar height
-                    map.setView([center.lat - 0.05, center.lng], 12); // Adjust latitude
-                    layer.openPopup(); // Open the popup for the borough
-                }
-            });
-        });
     })
     .catch(err => console.error("Failed to load GeoJSON data:", err));
+
+// Add autocomplete functionality to the search bar
+const searchBox = document.getElementById('search-box');
+const dropdown = document.createElement('ul');
+dropdown.id = 'autocomplete-dropdown';
+dropdown.style.position = 'absolute';
+dropdown.style.backgroundColor = '#fff';
+dropdown.style.border = '1px solid #ccc';
+dropdown.style.listStyle = 'none';
+dropdown.style.padding = '0';
+dropdown.style.margin = '0';
+dropdown.style.maxHeight = '150px';
+dropdown.style.overflowY = 'auto';
+dropdown.style.width = `${searchBox.offsetWidth}px`;
+dropdown.style.zIndex = '1000';
+dropdown.style.display = 'none'; // Hidden by default
+searchBox.parentElement.appendChild(dropdown);
+
+searchBox.addEventListener('input', function (e) {
+    const query = e.target.value.toLowerCase();
+    dropdown.innerHTML = ''; // Clear previous suggestions
+
+    if (query.length === 0) {
+        dropdown.style.display = 'none'; // Hide dropdown if query is empty
+        return;
+    }
+
+    // Filter borough names based on the input
+    const suggestions = boroughs.filter(borough =>
+        borough.toLowerCase().includes(query)
+    );
+
+    // Populate the dropdown with suggestions
+    suggestions.forEach(suggestion => {
+        const listItem = document.createElement('li');
+        listItem.textContent = suggestion;
+        listItem.style.padding = '5px';
+        listItem.style.cursor = 'pointer';
+
+        listItem.addEventListener('click', () => {
+            // Find the layer corresponding to the clicked suggestion
+            geojsonLayer.eachLayer(function (layer) {
+                if (layer.feature.properties.lad22nm === suggestion) {
+                    const bounds = layer.getBounds();
+                    map.fitBounds(bounds); // Zoom to the selected borough
+                    layer.openPopup(); // Open the popup
+                }
+            });
+
+            searchBox.value = suggestion; // Update the search box with the selected suggestion
+            dropdown.style.display = 'none'; // Hide the dropdown
+        });
+
+        dropdown.appendChild(listItem);
+    });
+
+    dropdown.style.display = 'block'; // Show the dropdown
+});
+
+// Hide the dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!searchBox.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+    }
+});
