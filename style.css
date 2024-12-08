@@ -35,52 +35,50 @@ main {
     padding: 20px; /* Add padding for better spacing */
 }
 
-/* Menu toggle button styling */
+/* Menu toggle button */
 .menu-button {
     position: absolute;
+    top: 15px;
     right: 15px;
-    top: 7px; /* Aligns vertically with top bar content */
-    background-color: #ffffff;
+    background-color: white;
     border: 1px solid #ccc;
     padding: 8px 12px;
     border-radius: 5px;
-    font-size: 14px;
     cursor: pointer;
-    z-index: 1100; /* Ensure it appears above the top bar */
-}
-
-.menu-button:hover {
-    background-color: #f0f0f0; /* Light gray background on hover */
+    z-index: 1100;
 }
 
 /* Menu dropdown styling */
 .menu-dropdown {
-    display: none; /* Hidden by default */
-    position: absolute;
-    top: 50px; /* Ensure dropdown opens below the top bar */
-    right: 15px; /* Align to the right side */
-    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+    position: fixed;
+    top: 60px; /* Ensure dropdown appears below the top bar */
+    right: 15px;
+    background-color: rgba(255, 255, 255, 0.95);
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-    z-index: 1050; /* Ensure it appears above the map or content */
-    width: 200px; /* Adjust dropdown width */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1050;
+    width: 200px;
     padding: 10px;
 }
 
-/* Menu items styling */
-.menu-dropdown a {
+.menu-dropdown .nav-link {
     display: block;
-    text-decoration: none;
-    color: #333; /* Dark gray */
+    color: #333;
     padding: 8px;
     border-radius: 4px;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
+    text-decoration: none;
 }
 
-.menu-dropdown a:hover {
-    background-color: #f0f0f0; /* Light gray background on hover */
+.menu-dropdown .nav-link:hover {
+    background-color: #f0f0f0;
+    color: #0066cc;
+}
+
+/* Main content styling */
+.container {
+    margin-top: 120px; /* Ensures content starts below the top bar */
+    padding: 20px;
 }
 
 /* Bottom bar styling */
