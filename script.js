@@ -9,7 +9,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
     .then(response => response.json())
     .then(data => {
-        L.geoJSON(data, {
+        const geojsonLayer = L.geoJSON(data, {
             style: {
                 color: "#0066cc",
                 weight: 2,
@@ -64,5 +64,18 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                 `);
             }
         }).addTo(map);
+
+        // Add the search control
+        const searchControl = new L.Control.Search({
+            layer: geojsonLayer,
+            propertyName: 'lad22nm', // Search by borough name
+            marker: false, // Disable marker creation
+            moveToLocation: function(latlng, title, map) {
+                // Zoom to the borough when selected
+                map.setView(latlng, 12); // Adjust the zoom level as needed
+            }
+        });
+
+        searchControl.addTo(map); // Add the search control to the map
     })
     .catch(err => console.error("Failed to load GeoJSON data:", err));
