@@ -56,4 +56,30 @@ function populateBoroughPage() {
         });
 }
 
-document.addEventListener("DOMContentLoaded", populateBoroughPage);
+// Dropdown menu toggle functionality
+function setupMenu() {
+    const menuButton = document.querySelector('.menu-button');
+    const dropdown = document.querySelector('.menu-dropdown');
+
+    if (!menuButton || !dropdown) {
+        console.error("Menu elements not found.");
+        return;
+    }
+
+    menuButton.addEventListener('click', () => {
+        const isDropdownVisible = dropdown.style.display === 'block';
+        dropdown.style.display = isDropdownVisible ? 'none' : 'block';
+    });
+
+    // Close the menu when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!menuButton.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    populateBoroughPage();
+    setupMenu();
+});
