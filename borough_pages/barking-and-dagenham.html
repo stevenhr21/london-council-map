@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borough Information - [Borough Name]</title>
     <link rel="stylesheet" href="../style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
     <!-- Top bar -->
@@ -12,19 +13,88 @@
         <h1>[Borough Name]</h1>
     </div>
 
-    <!-- Content -->
-    <div class="content">
-        <h2>Leader: [Leader Name]</h2>
-        <p><strong>Population:</strong> [Population]</p>
-        <p><strong>Budget (24/25):</strong> [Budget]</p>
-        <p><strong>Website:</strong> <a href="[Website]" target="_blank">Visit Council Website</a></p>
+    <!-- Navigation Menu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Borough Info</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#statistics">Statistics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#councillors">Councillors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Back to Map</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-        <!-- Add any other relevant details or images here -->
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Overview Section -->
+        <section id="overview">
+            <h2>Overview</h2>
+            <p><strong>Leader:</strong> [Leader Name]</p>
+            <p><strong>Population:</strong> [Population]</p>
+            <p><strong>Budget (24/25):</strong> [Budget]</p>
+            <p><strong>Website:</strong> <a href="[Website]" target="_blank">Visit Council Website</a></p>
+        </section>
+
+        <!-- Statistics Section -->
+        <section id="statistics" class="mt-5">
+            <h2>Statistics</h2>
+            <p>Below are key metrics and comparisons for this borough:</p>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>This Borough</th>
+                        <th>UK Average</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Population Density</td>
+                        <td>[This Borough Data]</td>
+                        <td>[UK Average]</td>
+                        <td>[Difference]</td>
+                    </tr>
+                    <tr>
+                        <td>Public Spending per Capita</td>
+                        <td>[This Borough Data]</td>
+                        <td>[UK Average]</td>
+                        <td>[Difference]</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Councillors Section -->
+        <section id="councillors" class="mt-5">
+            <h2>Councillors</h2>
+            <p>Here is the list of councillors for [Borough Name]:</p>
+            <ul>
+                <li>[Councillor 1]</li>
+                <li>[Councillor 2]</li>
+                <li>[Councillor 3]</li>
+                <!-- Add more councillors -->
+            </ul>
+        </section>
     </div>
 
-    <!-- Back button -->
-    <div class="bottom-bar">
-        <a href="../index.html" style="color: white; text-decoration: none;">Back to Map</a>
-    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
