@@ -35,7 +35,7 @@ main {
     padding: 20px; /* Add padding for better spacing */
 }
 
-/* Menu toggle button */
+/* Menu toggle button styling */
 .menu-button {
     position: absolute;
     top: 15px;
@@ -48,36 +48,47 @@ main {
     z-index: 1100;
 }
 
-/* Menu dropdown styling */
+/* Dropdown menu styling */
 .menu-dropdown {
-    position: fixed;
-    top: 60px; /* Ensure dropdown appears below the top bar */
-    right: 15px;
+    position: absolute;
+    top: 60px; /* Below the top bar */
+    right: 15px; /* Aligned to the button */
     background-color: rgba(255, 255, 255, 0.95);
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
     z-index: 1050;
     width: 200px;
     padding: 10px;
 }
 
-.menu-dropdown .nav-link {
-    display: block;
-    color: #333;
-    padding: 8px;
-    border-radius: 4px;
-    text-decoration: none;
+.menu-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.menu-dropdown .nav-link:hover {
+.menu-dropdown ul li {
+    margin-bottom: 10px;
+}
+
+.menu-dropdown ul li a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-dropdown ul li a:hover {
     background-color: #f0f0f0;
     color: #0066cc;
 }
 
 /* Main content styling */
 .container {
-    margin-top: 120px; /* Ensures content starts below the top bar */
+    margin-top: 100px; /* Ensure content starts below the top bar */
     padding: 20px;
 }
 
