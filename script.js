@@ -72,8 +72,11 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
             geojsonLayer.eachLayer(function (layer) {
                 const boroughName = layer.feature.properties.lad22nm.toLowerCase();
                 if (boroughName.startsWith(query)) {
-                    // Zoom to matching borough
-                    map.setView(layer.getBounds().getCenter(), 12);
+                    const bounds = layer.getBounds(); // Get borough bounds
+                    const center = bounds.getCenter(); // Calculate center
+
+                    // Offset the map's view to account for the top bar height
+                    map.setView([center.lat - 0.03, center.lng], 12); // Adjust latitude
                     layer.openPopup(); // Open the popup for the borough
                 }
             });
