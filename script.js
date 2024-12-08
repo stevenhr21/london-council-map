@@ -31,8 +31,8 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     : "Data not available";
                 const website = feature.properties.Website || "#";
 
-                // Store borough names for dropdown autocomplete
-                boroughs.push(boroughName);
+                // Add button link for 'Find out more'
+                const findOutMoreLink = `borough_pages/${boroughName.replace(/\s+/g, '-').toLowerCase()}.html`;
 
                 // Hover effects
                 layer.on({
@@ -59,18 +59,23 @@ fetch('data/london_boroughs.geojson') // Path to your GeoJSON file
                     }
                 });
 
-                // Popup with detailed information
+                // Popup with detailed information and button
                 layer.bindPopup(`
                     <strong>${boroughName}</strong><br>
                     <strong>Leader:</strong> ${leader}<br>
                     <strong>Population:</strong> ${population}<br>
                     <strong>Budget (24/25):</strong> ${budget}<br>
-                    <a href="${website}" target="_blank">Visit Council Website</a>
+                    <a href="${website}" target="_blank">Visit Council Website</a><br>
+                    <button 
+                        onclick="window.location.href='${findOutMoreLink}'" 
+                        style="margin-top: 10px; padding: 5px 10px; background-color: #0066cc; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Find out more
+                    </button>
                 `);
             }
         }).addTo(map);
 
-        // Add dropdown functionality to the search bar
+        // Custom search functionality (unchanged from previous)
         const searchBox = document.getElementById('search-box');
         const dropdown = document.createElement('ul');
         dropdown.id = 'autocomplete-dropdown';
