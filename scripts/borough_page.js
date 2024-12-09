@@ -72,33 +72,34 @@ async function fetchCouncillors() {
         "https://lbbd.moderngov.co.uk/mgWebService.asmx/GetCouncillorsByWard";
 
     try {
-        // Fetch data from the ModernGov endpoint
-        const response = await fetch(endpoint);
+        const response = await fetch(endpoint, { mode: 'cors' }); // Add CORS mode here
         const xmlText = await response.text();
+        console.log("Raw XML Response:", xmlText);
 
-        // Parse the XML
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+        console.log("Parsed XML Document:", xmlDoc);
 
-        // Extract ward data
         const wards = xmlDoc.getElementsByTagName("ward");
+        console.log("Number of Wards Found:", wards.length);
+
         const councillorList = document.getElementById("councillor-list");
         councillorList.innerHTML = ""; // Clear any existing rows
 
         if (!wards || wards.length === 0) {
+            console.error("No wards found in the XML data.");
             handleMissingCouncillorData();
             return;
         }
 
-        // Loop through each ward
         for (let i = 0; i < wards.length; i++) {
             const ward = wards[i];
             const wardTitle =
                 ward.getElementsByTagName("wardtitle")[0]?.textContent.trim() ||
                 "Unknown Ward";
 
-            // Extract councillors for this ward
             const councillors = ward.getElementsByTagName("councillor");
+            console.log(`Ward: ${wardTitle}, Councillors: ${councillors.length}`);
 
             for (let j = 0; j < councillors.length; j++) {
                 const councillor = councillors[j];
@@ -112,21 +113,18 @@ async function fetchCouncillors() {
                     councillor.getElementsByTagName("keyposts")[0]
                         ?.textContent.trim() || "Councillor";
 
-                // Create a new table row
                 const row = document.createElement("tr");
 
-                // Add color coding based on political party
                 let partyColor;
-                if (party.includes("Labour")) partyColor = "#FFCCCC"; // Light red
+                if (party.includes("Labour")) partyColor = "#FFCCCC";
                 else if (party.includes("Conservative"))
-                    partyColor = "#CCCCFF"; // Light blue
+                    partyColor = "#CCCCFF";
                 else if (party.includes("Liberal Democrat"))
-                    partyColor = "#FFFFCC"; // Light yellow
-                else partyColor = "#FFFFFF"; // Default: White
+                    partyColor = "#FFFFCC";
+                else partyColor = "#FFFFFF";
 
                 row.style.backgroundColor = partyColor;
 
-                // Populate the row
                 row.innerHTML = `
                     <td>${name}</td>
                     <td>${role}</td>
