@@ -80,52 +80,60 @@ async function fetchCouncillors() {
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
 
-        // Extract councillor data from the XML
-        const councillors = xmlDoc.getElementsByTagName("Councillor");
+        // Extract ward data
+        const wards = xmlDoc.getElementsByTagName("ward");
         const councillorList = document.getElementById("councillor-list");
         councillorList.innerHTML = ""; // Clear any existing rows
 
-        if (!councillors || councillors.length === 0) {
+        if (!wards || wards.length === 0) {
             handleMissingCouncillorData();
             return;
         }
 
-        // Loop through each councillor and populate the table
-        for (let i = 0; i < councillors.length; i++) {
-            const councillor = councillors[i];
-            const name =
-                councillor.getElementsByTagName("Name")[0]?.textContent ||
-                "Unknown";
-            const ward =
-                councillor.getElementsByTagName("Ward")[0]?.textContent ||
-                "Unknown";
-            const role =
-                councillor.getElementsByTagName("Role")[0]?.textContent ||
-                "Councillor";
-            const party =
-                councillor.getElementsByTagName("Party")[0]?.textContent ||
-                "Unknown";
+        // Loop through each ward
+        for (let i = 0; i < wards.length; i++) {
+            const ward = wards[i];
+            const wardTitle =
+                ward.getElementsByTagName("wardtitle")[0]?.textContent.trim() ||
+                "Unknown Ward";
 
-            // Create a new table row
-            const row = document.createElement("tr");
+            // Extract councillors for this ward
+            const councillors = ward.getElementsByTagName("councillor");
 
-            // Add color coding based on political party
-            let partyColor;
-            if (party.includes("Labour")) partyColor = "#FFCCCC"; // Light red
-            else if (party.includes("Conservative")) partyColor = "#CCCCFF"; // Light blue
-            else if (party.includes("Liberal Democrat"))
-                partyColor = "#FFFFCC"; // Light yellow
-            else partyColor = "#FFFFFF"; // Default: White
+            for (let j = 0; j < councillors.length; j++) {
+                const councillor = councillors[j];
+                const name =
+                    councillor.getElementsByTagName("fullusername")[0]
+                        ?.textContent.trim() || "Unknown";
+                const party =
+                    councillor.getElementsByTagName("politicalpartytitle")[0]
+                        ?.textContent.trim() || "Unknown";
+                const role =
+                    councillor.getElementsByTagName("keyposts")[0]
+                        ?.textContent.trim() || "Councillor";
 
-            row.style.backgroundColor = partyColor;
+                // Create a new table row
+                const row = document.createElement("tr");
 
-            // Populate the row
-            row.innerHTML = `
-                <td>${name}</td>
-                <td>${role}</td>
-                <td>${ward}</td>
-            `;
-            councillorList.appendChild(row);
+                // Add color coding based on political party
+                let partyColor;
+                if (party.includes("Labour")) partyColor = "#FFCCCC"; // Light red
+                else if (party.includes("Conservative"))
+                    partyColor = "#CCCCFF"; // Light blue
+                else if (party.includes("Liberal Democrat"))
+                    partyColor = "#FFFFCC"; // Light yellow
+                else partyColor = "#FFFFFF"; // Default: White
+
+                row.style.backgroundColor = partyColor;
+
+                // Populate the row
+                row.innerHTML = `
+                    <td>${name}</td>
+                    <td>${role}</td>
+                    <td>${wardTitle}</td>
+                `;
+                councillorList.appendChild(row);
+            }
         }
     } catch (err) {
         console.error("Error fetching councillor data:", err);
