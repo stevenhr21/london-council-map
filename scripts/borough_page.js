@@ -72,64 +72,62 @@ async function fetchCouncillors() {
         "https://lbbd.moderngov.co.uk/mgWebService.asmx/GetCouncillorsByWard";
 
     try {
-        const response = await fetch(endpoint, { mode: 'cors' }); // Add CORS mode here
+        const response = await fetch(endpoint, { mode: 'cors' });
         const xmlText = await response.text();
-        console.log("Raw XML Response:", xmlText);
-
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-        console.log("Parsed XML Document:", xmlDoc);
 
+        // Extract all ward elements
         const wards = xmlDoc.getElementsByTagName("ward");
-        console.log("Number of Wards Found:", wards.length);
 
+        // Reference to the councillor table in the HTML
         const councillorList = document.getElementById("councillor-list");
         councillorList.innerHTML = ""; // Clear any existing rows
 
         if (!wards || wards.length === 0) {
-            console.error("No wards found in the XML data.");
             handleMissingCouncillorData();
             return;
         }
 
+        // Loop through each ward and councillors
         for (let i = 0; i < wards.length; i++) {
             const ward = wards[i];
             const wardTitle =
-                ward.getElementsByTagName("wardtitle")[0]?.textContent.trim() ||
-                "Unknown Ward";
+                ward.getElementsByTagName("wardtitle")[0]?.textContent.trim() || "Unknown Ward";
 
             const councillors = ward.getElementsByTagName("councillor");
-            console.log(`Ward: ${wardTitle}, Councillors: ${councillors.length}`);
 
             for (let j = 0; j < councillors.length; j++) {
                 const councillor = councillors[j];
                 const name =
-                    councillor.getElementsByTagName("fullusername")[0]
-                        ?.textContent.trim() || "Unknown";
+                    councillor.getElementsByTagName("fullusername")[0]?.textContent.trim() ||
+                    "Unknown";
                 const party =
-                    councillor.getElementsByTagName("politicalpartytitle")[0]
-                        ?.textContent.trim() || "Unknown";
+                    councillor.getElementsByTagName("politicalpartytitle")[0]?.textContent.trim() ||
+                    "Unknown";
                 const role =
-                    councillor.getElementsByTagName("keyposts")[0]
-                        ?.textContent.trim() || "Councillor";
+                    councillor.getElementsByTagName("keyposts")[0]?.textContent.trim() || "Councillor";
 
+                // Create a new table row
                 const row = document.createElement("tr");
 
+                // Add color coding based on political party
                 let partyColor;
                 if (party.includes("Labour")) partyColor = "#FFCCCC";
-                else if (party.includes("Conservative"))
-                    partyColor = "#CCCCFF";
-                else if (party.includes("Liberal Democrat"))
-                    partyColor = "#FFFFCC";
+                else if (party.includes("Conservative")) partyColor = "#CCCCFF";
+                else if (party.includes("Liberal Democrat")) partyColor = "#FFFFCC";
                 else partyColor = "#FFFFFF";
 
                 row.style.backgroundColor = partyColor;
 
+                // Add cells to the row
                 row.innerHTML = `
                     <td>${name}</td>
                     <td>${role}</td>
                     <td>${wardTitle}</td>
                 `;
+
+                // Append the row to the table
                 councillorList.appendChild(row);
             }
         }
@@ -141,13 +139,11 @@ async function fetchCouncillors() {
 
 function handleMissingCouncillorData() {
     const councillorList = document.getElementById("councillor-list");
-    councillorList.innerHTML = `
-        <tr>
-            <td colspan="3" style="text-align: center; color: red;">
-                No councillor data available for this borough.
-            </td>
-        </tr>`;
+    councillorList.innerHTML = `<tr><td colspan="3">No councillor data available for this borough.</td></tr>`;
 }
+
+// Call the function when the page loads
+document.addEventListener("DOMContentLoaded", fetchCouncillors);
 
 // Dropdown menu toggle functionality
 function setupMenu() {
