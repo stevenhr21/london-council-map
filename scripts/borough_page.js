@@ -72,19 +72,30 @@ async function fetchCouncillors() {
         "https://lbbd.moderngov.co.uk/mgWebService.asmx/GetCouncillorsByWard";
 
     try {
+        // Fetch data from the endpoint
         const response = await fetch(endpoint, { mode: 'cors' });
         const xmlText = await response.text();
+
+        // Log raw XML response for debugging
+        console.log("Raw XML Response:", xmlText);
+
+        // Parse the XML
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
 
+        // Log parsed XML for inspection
+        console.log("Parsed XML Document:", xmlDoc);
+
         // Extract all ward elements
         const wards = xmlDoc.getElementsByTagName("ward");
+        console.log("Wards Found:", wards);
 
         // Reference to the councillor table in the HTML
         const councillorList = document.getElementById("councillor-list");
         councillorList.innerHTML = ""; // Clear any existing rows
 
         if (!wards || wards.length === 0) {
+            console.warn("No wards found in XML.");
             handleMissingCouncillorData();
             return;
         }
@@ -94,6 +105,8 @@ async function fetchCouncillors() {
             const ward = wards[i];
             const wardTitle =
                 ward.getElementsByTagName("wardtitle")[0]?.textContent.trim() || "Unknown Ward";
+
+            console.log(`Processing Ward: ${wardTitle}`);
 
             const councillors = ward.getElementsByTagName("councillor");
 
@@ -106,7 +119,11 @@ async function fetchCouncillors() {
                     councillor.getElementsByTagName("politicalpartytitle")[0]?.textContent.trim() ||
                     "Unknown";
                 const role =
-                    councillor.getElementsByTagName("keyposts")[0]?.textContent.trim() || "Councillor";
+                    councillor.getElementsByTagName("keyposts")[0]?.textContent.trim() ||
+                    "Councillor";
+
+                // Log councillor details for debugging
+                console.log("Councillor Details:", { name, party, role, wardTitle });
 
                 // Create a new table row
                 const row = document.createElement("tr");
